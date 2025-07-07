@@ -46,8 +46,8 @@ module design_user_logic_c0_0 (
     AXI4SR.m                    axis_host_send [N_STRM_AXI],
 
     // CARD DATA STREAMS
-    //AXI4SR.s                    axis_card_recv [N_CARD_AXI],
-    //AXI4SR.m                    axis_card_send [N_CARD_AXI],
+    AXI4SR.s                    axis_card_recv [N_CARD_AXI],
+    AXI4SR.m                    axis_card_send [N_CARD_AXI],
 
     // RDMA DATA STREAMS REQUESTER
     AXI4SR.s                    axis_rreq_recv [N_RDMA_AXI],
@@ -64,14 +64,7 @@ module design_user_logic_c0_0 (
 
 /* -- Tie-off unused interfaces and signals ----------------------------- */
 always_comb notify.tie_off_m();
-always_comb axis_rrsp_send[0].tie_off_m();
-always_comb axis_rrsp_send[1].tie_off_m();
-always_comb axis_host_recv[2].tie_off_s();
 
-/*always_comb axis_card_recv[0].tie_off_s();
-always_comb axis_card_recv[1].tie_off_s();
-always_comb axis_card_send[0].tie_off_m();
-always_comb axis_card_send[1].tie_off_m();*/
 
 /* -- USER LOGIC -------------------------------------------------------- */
 
@@ -149,7 +142,6 @@ accl_bd_wrapper accl_system(
     .m_axis_host_2_tvalid(axis_host_send[2].tvalid),
     .m_axis_host_2_tdest(),
 
-    /*
     .m_axis_card_0_tdata(axis_card_send[0].tdata),
     .m_axis_card_0_tkeep(axis_card_send[0].tkeep),
     .m_axis_card_0_tlast(axis_card_send[0].tlast),
@@ -170,7 +162,6 @@ accl_bd_wrapper accl_system(
     .m_axis_card_2_tready(axis_card_send[2].tready),
     .m_axis_card_2_tvalid(axis_card_send[2].tvalid),
     .m_axis_card_2_tdest(),
-    */
 
     .s_axis_host_0_tdata(axis_host_recv[0].tdata),
     .s_axis_host_0_tkeep(axis_host_recv[0].tkeep),
@@ -183,7 +174,13 @@ accl_bd_wrapper accl_system(
     .s_axis_host_1_tlast(axis_host_recv[1].tlast),
     .s_axis_host_1_tready(axis_host_recv[1].tready),
     .s_axis_host_1_tvalid(axis_host_recv[1].tvalid),
-    /*
+
+    .s_axis_host_2_tdata(axis_host_recv[2].tdata),
+    .s_axis_host_2_tkeep(axis_host_recv[2].tkeep),
+    .s_axis_host_2_tlast(axis_host_recv[2].tlast),
+    .s_axis_host_2_tready(axis_host_recv[2].tready),
+    .s_axis_host_2_tvalid(axis_host_recv[2].tvalid),
+
     .s_axis_card_0_tdata(axis_card_recv[0].tdata),
     .s_axis_card_0_tkeep(axis_card_recv[0].tkeep),
     .s_axis_card_0_tlast(axis_card_recv[0].tlast),
@@ -195,7 +192,12 @@ accl_bd_wrapper accl_system(
     .s_axis_card_1_tlast(axis_card_recv[1].tlast),
     .s_axis_card_1_tready(axis_card_recv[1].tready),
     .s_axis_card_1_tvalid(axis_card_recv[1].tvalid),
-    */
+
+    .s_axis_card_2_tdata(axis_card_recv[2].tdata),
+    .s_axis_card_2_tkeep(axis_card_recv[2].tkeep),
+    .s_axis_card_2_tlast(axis_card_recv[2].tlast),
+    .s_axis_card_2_tready(axis_card_recv[2].tready),
+    .s_axis_card_2_tvalid(axis_card_recv[2].tvalid),
 
     .cyt_rreq_recv_0_tdata(axis_rreq_recv[0].tdata),
     .cyt_rreq_recv_0_tkeep(axis_rreq_recv[0].tkeep),
@@ -235,59 +237,80 @@ accl_bd_wrapper accl_system(
     .cyt_rrsp_recv_1_tkeep(axis_rrsp_recv[1].tkeep),
     .cyt_rrsp_recv_1_tlast(axis_rrsp_recv[1].tlast),
     .cyt_rrsp_recv_1_tready(axis_rrsp_recv[1].tready),
-    .cyt_rrsp_recv_1_tvalid(axis_rrsp_recv[1].tvalid)
+    .cyt_rrsp_recv_1_tvalid(axis_rrsp_recv[1].tvalid),
+
+    .cyt_rrsp_send_0_tdata(axis_rrsp_send[0].tdata),
+    .cyt_rrsp_send_0_tkeep(axis_rrsp_send[0].tkeep),
+    .cyt_rrsp_send_0_tlast(axis_rrsp_send[0].tlast),
+    .cyt_rrsp_send_0_tready(axis_rrsp_send[0].tready),
+    .cyt_rrsp_send_0_tvalid(axis_rrsp_send[0].tvalid),
+
+    .cyt_rrsp_send_1_tdata(axis_rrsp_send[1].tdata),
+    .cyt_rrsp_send_1_tkeep(axis_rrsp_send[1].tkeep),
+    .cyt_rrsp_send_1_tlast(axis_rrsp_send[1].tlast),
+    .cyt_rrsp_send_1_tready(axis_rrsp_send[1].tready),
+    .cyt_rrsp_send_1_tvalid(axis_rrsp_send[1].tvalid)
 
 );
 
 
-ila_top inst_ila_top(
-     .clk(aclk),
-     .probe0(sq_wr.valid), //1
-     .probe1(sq_wr.ready), //1
-     .probe2(sq_wr.data), //128
-     .probe3(sq_rd.valid), //1
-     .probe4(sq_rd.ready), //1
-     .probe5(sq_rd.data), //128
-     .probe6(rq_wr.valid), //1
-     .probe7(rq_wr.ready), //1
-     .probe8(rq_wr.data), //128
-     .probe9(rq_rd.valid), //1
-     .probe10(rq_rd.ready), //1
-     .probe11(rq_rd.data), //128
-     .probe12(axis_rreq_send[0].tvalid),
-     .probe13(axis_rreq_send[0].tready),
-     .probe14(axis_rreq_send[1].tvalid),
-     .probe15(axis_rreq_send[1].tready),
-     .probe16(axis_rrsp_recv[0].tvalid),
-     .probe17(axis_rrsp_recv[0].tready),
-     .probe18(axis_rrsp_recv[1].tvalid),
-     .probe19(axis_rrsp_recv[1].tready),
-     .probe20(axis_rreq_send[0].tlast),
-     .probe21(axis_rreq_send[1].tlast),
-     .probe22(axis_rrsp_recv[0].tlast),
-     .probe23(axis_rrsp_recv[1].tlast),
-     .probe24(cq_rd.data), //32
-     .probe25(cq_rd.valid),
-     .probe26(cq_rd.ready),
-     .probe27(cq_wr.data), //32
-     .probe28(cq_wr.valid),
-     .probe29(cq_wr.ready),
-     .probe30(axis_host_send[0].tvalid),
-     .probe31(axis_host_send[0].tready),
-     .probe32(axis_host_send[0].tdata),
-     .probe33(axis_host_send[1].tvalid),
-     .probe34(axis_host_send[1].tready),
-     .probe35(axis_host_send[1].tdata),
-     .probe36(axis_host_send[2].tvalid),
-     .probe37(axis_host_send[2].tready),
-     .probe38(axis_host_send[2].tdata),
-     .probe39(axis_host_recv[0].tvalid),
-     .probe40(axis_host_recv[0].tready),
-     .probe41(axis_host_recv[0].tdata),
-     .probe42(axis_host_recv[1].tvalid),
-     .probe43(axis_host_recv[1].tready),
-     .probe44(axis_host_recv[1].tdata)
- );
+// ila_top ila_top(
+//     .clk(aclk),
+//     .probe0(sq_wr.valid), //1
+//     .probe1(sq_wr.ready), //1
+//     .probe2(sq_wr.data), //128
+//     .probe3(sq_rd.valid), //1
+//     .probe4(sq_rd.ready), //1
+//     .probe5(sq_rd.data), //128
+//     .probe6(rq_wr.valid), //1
+//     .probe7(rq_wr.ready), //1
+//     .probe8(rq_wr.data), //128
+//     .probe9(rq_rd.valid), //1
+//     .probe10(rq_rd.ready), //1
+//     .probe11(rq_rd.data), //128
+//     .probe12(axis_rreq_send[0].tvalid),
+//     .probe13(axis_rreq_send[0].tready),
+//     .probe14(axis_rreq_send[1].tvalid),
+//     .probe15(axis_rreq_send[1].tready),
+//     .probe16(axis_rrsp_recv[0].tvalid),
+//     .probe17(axis_rrsp_recv[0].tready),
+//     .probe18(axis_rrsp_recv[1].tvalid),
+//     .probe19(axis_rrsp_recv[1].tready),
+//     .probe20(axis_rreq_send[0].tlast),
+//     .probe21(axis_rreq_send[1].tlast),
+//     .probe22(axis_rrsp_recv[0].tlast),
+//     .probe23(axis_rrsp_recv[1].tlast),
+//     .probe24(cq_rd.data), //32
+//     .probe25(cq_rd.valid),
+//     .probe26(cq_rd.ready),
+//     .probe27(cq_wr.data), //32
+//     .probe28(cq_wr.valid),
+//     .probe29(cq_wr.ready),
+//     .probe30(axis_host_send[0].tvalid),
+//     .probe31(axis_host_send[0].tready),
+//     .probe32(axis_host_send[1].tvalid),
+//     .probe33(axis_host_send[1].tready),
+//     .probe34(axis_host_send[2].tvalid),
+//     .probe35(axis_host_send[2].tready),
+//     .probe36(axis_card_send[0].tvalid),
+//     .probe37(axis_card_send[0].tready),
+//     .probe38(axis_card_send[1].tvalid),
+//     .probe39(axis_card_send[1].tready),
+//     .probe40(axis_card_send[2].tvalid),
+//     .probe41(axis_card_send[2].tready),
+//     .probe42(axis_host_recv[0].tvalid),
+//     .probe43(axis_host_recv[0].tready),
+//     .probe44(axis_host_recv[1].tvalid),
+//     .probe45(axis_host_recv[1].tready),
+//     .probe46(axis_host_recv[2].tvalid),
+//     .probe47(axis_host_recv[2].tready),
+//     .probe48(axis_card_recv[0].tvalid),
+//     .probe49(axis_card_recv[0].tready),
+//     .probe50(axis_card_recv[1].tvalid),
+//     .probe51(axis_card_recv[1].tready),
+//     .probe52(axis_card_recv[2].tvalid),
+//     .probe53(axis_card_recv[2].tready)
+// );
 
 
 
@@ -296,13 +319,14 @@ assign axis_host_send[0].tid = 0;
 assign axis_host_send[1].tid = 0;
 assign axis_host_send[2].tid = 0;
 
-/*
 assign axis_card_send[0].tid = 0;
 assign axis_card_send[1].tid = 0;
 assign axis_card_send[2].tid = 0;
-*/
 
 assign axis_rreq_send[0].tid = 0;
 assign axis_rreq_send[1].tid = 0;
+
+assign axis_rrsp_send[0].tid = 0;
+assign axis_rrsp_send[1].tid = 0;
 
 endmodule

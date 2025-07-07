@@ -264,6 +264,7 @@ extern hlslib::Stream<ap_axiu<32,0,0,0>, 512> sts_fifos[5];
 
 #endif
 
+//add int for type &programm in driver
 typedef struct {
     unsigned int status;
     unsigned int addrl;
@@ -273,16 +274,19 @@ typedef struct {
     unsigned int rx_len;
     unsigned int rx_src;
     unsigned int sequence_number;
+    unsigned int host;
 } rx_buffer;
 
 #define STATUS_OFFSET           0
 #define ADDRL_OFFSET            1
 #define ADDRH_OFFSET            2
-#define RX_TAG_OFFSET           3
-#define RX_LEN_OFFSET           4
-#define RX_SRC_OFFSET           5
-#define SEQUENCE_NUMBER_OFFSET  6   
-#define SPARE_BUFFER_FIELDS     7       
+#define MAX_LEN_OFFSET          3
+#define RX_TAG_OFFSET           4
+#define RX_LEN_OFFSET           5
+#define RX_SRC_OFFSET           6
+#define SEQUENCE_NUMBER_OFFSET  7 
+#define HOST_OFFSET             8 //host address offset for the buffer  
+#define SPARE_BUFFER_FIELDS     9      
 
 #define STATUS_IDLE     0x00
 #define STATUS_ENQUEUED 0x01

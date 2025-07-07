@@ -106,7 +106,7 @@ endif
 BUILD_DIR := link_$(MODE)_$(XSA)
 XCLBIN=$(BUILD_DIR)/ccl_offload.xclbin
 
-CYT_BUILD_DIR=coyote_build_$(CCLO_STACK_TYPE)_$(BOARD)
+CYT_BUILD_DIR=coyote_build_$(CCLO_STACK_TYPE)_$(BOARD)_nocard_changed_enmem0_dest_field
 CYT_BIT=$(CYT_BUILD_DIR)/bitstreams/cyt_top.bit
 
 OUTPUT_PRODUCT := $(XCLBIN)
@@ -194,7 +194,7 @@ else ifeq (coyote_rdma, $(MODE))
 		N_DDR_CHAN = 2
 	endif
 	OTHER_XO += $(CYT_ADAPTER_XO)
-	COYOTE_CONFIG = -DFDEV_NAME=$(BOARD) -DEXAMPLE=rdma -DSHELL_PROBE=8 -DN_REGIONS=1 -DEN_MEM=1 -DEN_STRM=1 -DEN_RDMA=1 -DN_RDMA_AXI=2 -DN_STRM_AXI=3 -DN_CARD_AXI=3 -DACLK_F=250 -DTLBL_A=12 -DN_DDR_CHAN=$(N_DDR_CHAN)
+	COYOTE_CONFIG = -DFDEV_NAME=$(BOARD) -DEXAMPLE=rdma -DSHELL_PROBE=8 -DN_REGIONS=1 -DEN_MEM=0 -DEN_STRM=1 -DEN_RDMA=1 -DN_RDMA_AXI=2 -DN_STRM_AXI=3 -DACLK_F=250
 	CCLO_STACK_TYPE = RDMA
 	OUTPUT_PRODUCT = $(CYT_BIT)
 	USE_HOSTMEM = 1
@@ -202,7 +202,7 @@ else
 	$(error Unsupported MODE)
 endif
 
-CCLO_XO = ../../kernels/cclo/$(CCLO_STACK_TYPE)_1111$(CCLO_MB_DEBUG_LEVEL)_$(FPGAPART)/ccl_offload.xo
+CCLO_XO = ../../kernels/cclo/$(CCLO_STACK_TYPE)_1101$(CCLO_MB_DEBUG_LEVEL)_$(FPGAPART)/ccl_offload.xo
 OTHER_XO += $(CCLO_XO)
 
 ifeq (1, $(USE_HOSTMEM))

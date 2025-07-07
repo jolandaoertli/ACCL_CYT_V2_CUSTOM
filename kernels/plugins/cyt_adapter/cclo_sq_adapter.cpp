@@ -61,7 +61,9 @@ void cclo_sq_adapter(
         case META:
             if(!STREAM_IS_EMPTY(cclo_sq)){
                 cclo_req = STREAM_READ(cclo_sq);
-
+                //Q: shouldn't cyt_req.host be assigned to cclo_req.host?
+                //Q: let dest be 0 until dma channel assigned in dma sq adapter? or how to determine this?
+                //Q: if we set stream to rmda but not the rdma bit, is this correct?
                 cyt_req.rsrvd = 0;
                 cyt_req.offs = 0;
                 cyt_req.host = 0;
@@ -99,6 +101,8 @@ void cclo_sq_adapter(
                 outWord.data = currWord.data;
                 outWord.keep = currWord.keep;
                 outWord.last = currWord.last;
+                //Q: should this be done over the outword dest field? because this streams into coyote. (switch cyt_req.dest to cyt_req.host)
+                
                 outWord.dest = cyt_req.dest; // use the dest flag to indicate whether it is to host or device
                 word_cnt++;
                 

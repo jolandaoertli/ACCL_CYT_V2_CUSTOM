@@ -43,9 +43,12 @@ void dm_sq_cmd_converter(hls::stream<ap_axiu<104,0,0,DEST_WIDTH>>& dm_cmd,
 		ap_uint<23> btt = dm_cmd_word(22,0);
 		ap_uint<64> saddr = dm_cmd_word(95,32);
 		ap_uint<4> tag = dm_cmd_word(99,96);
+		//Q: the RDMA stream gets not accounted here, does an rdma command never involve 
 		ap_uint<1> strm = dm_cmd_with_dest.dest(2,0); // 1 if targeting host memory, 0 if targeting card memory
 		ap_uint<1> ctl = dm_cmd_word(30,30); // ctl field determines if a TLAST must be asserted at the end of the data stream
 
+		//Q: shouldn't the host bit be set to the same as the stream?
+		//Q: what are all the other arguments used for?
 		cyt_req_t req(0/*rsrvd_arg*/, 0 /*offs_arg*/, 0 /*host_arg*/, 0 /*actv_arg*/,
               btt/*len_arg*/, saddr /*vaddr_arg*/, ctl /*last_arg*/,
               DMA_CHANNEL /*dest_arg*/, 0 /*pid_arg*/, 0 /*vfid_arg*/,
@@ -77,6 +80,8 @@ void cyt_rq_sq_cmd_converter(
 	if(!STREAM_IS_EMPTY(cyt_rq_cmd)){
 		cyt_req_t req = STREAM_READ(cyt_rq_cmd);
 		
+		//Q: is the channel set correctly, i don't understand the argument for the host_arg
+
 		// Currently has to set the pid to 0, corresponding to coyote_proc instead of any coyote_qproc
 		// Because all the buffer allocation within the ACCL driver is associated with the coyote_proc
 		// And every coyote_qproc has a unique physical address in device which is different than the coyote_proc
