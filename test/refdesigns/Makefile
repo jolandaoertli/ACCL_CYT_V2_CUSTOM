@@ -106,7 +106,7 @@ endif
 BUILD_DIR := link_$(MODE)_$(XSA)
 XCLBIN=$(BUILD_DIR)/ccl_offload.xclbin
 
-CYT_BUILD_DIR=coyote_build_$(CCLO_STACK_TYPE)_$(BOARD)_norrsp_nocomp_opt_tlb2_eager_host_two_ila
+CYT_BUILD_DIR=coyote_build_$(CCLO_STACK_TYPE)_$(BOARD)_nocard_sim_try2
 CYT_BIT=$(CYT_BUILD_DIR)/bitstreams/cyt_top.bit
 
 OUTPUT_PRODUCT := $(XCLBIN)
@@ -237,7 +237,7 @@ coyote_shell: $(CYT_BUILD_DIR)/test_config_0/user_c0_0/test.xpr
 
 $(CYT_BUILD_DIR)/test_config_0/user_c0_0/test.xpr:
 	mkdir $(CYT_BUILD_DIR) && cd $(CYT_BUILD_DIR) && cmake ../hdl/ $(COYOTE_CONFIG)
-	$(MAKE) -C $(CYT_BUILD_DIR) project
+	$(MAKE) -C $(CYT_BUILD_DIR) sim
 
 $(CYT_BIT): coyote_shell
 	$(MAKE) -C ../../kernels/cclo PLATFORM=$(PLATFORM) STACK_TYPE=$(CCLO_STACK_TYPE) MB_DEBUG_LEVEL=$(CCLO_MB_DEBUG_LEVEL)

@@ -622,13 +622,13 @@ module ccl_offload
         .s_axi_control_wstrb(s_axi_control_wstrb),
         .s_axi_control_wvalid(s_axi_control_wvalid)
         );
-#ila to capture commands between hostctrl and cclo
-ila_top inst_ila_top(
-     .clk(ap_clk),
-     .probe0(s_axis_call_req_tdata), //32
-     .probe1(s_axis_call_req_tready),
-     .probe2(s_axis_call_req_tvalid),
-     .probe3(s_axis_call_req_tlast)
-);
+//ila to capture commands between hostctrl and cclo
+//ila_top inst_ila_top(
+     //.clk(ap_clk),
+     //.probe0(s_axis_call_req_tdata), //32
+     //.probe1(s_axis_call_req_tready),
+     //.probe2(s_axis_call_req_tvalid),
+     //.probe3(s_axis_call_req_tlast)
+//);
 
 endmodule

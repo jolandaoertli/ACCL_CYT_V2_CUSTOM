@@ -14,19 +14,19 @@ if(EXAMPLE STREQUAL "rdma")
     set(N_REGIONS 1)
     set(EN_STRM 1)
     set(EN_RDMA 1)
-    set(N_STRM_AXI 3)
-    set(N_CARD_AXI 3)
+    set(EN_MEM 0)
+    set(N_STRM_AXI 3) #change to two
+    #set(N_CARD_AXI 0)
     set(N_RDMA_AXI 2)
-    set(ACLK_F 250)
+    #set card to two again
     set(TLBL_A 2)
-    set(EN_MEM 1)
     set(BUILD_OPT 1)
 
     validation_checks_hw()
 
-    # load_apps (
-    #     VFPGA_C0_0 "coyote_rdma_top.sv"
-    # )
+    load_apps (
+         VFPGA_C0_0 "coyote_rdma_top.sv"
+     )
 
     create_hw()
 endif()
